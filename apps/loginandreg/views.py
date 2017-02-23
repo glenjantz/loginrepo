@@ -7,6 +7,7 @@ def index(request):
 
 def register(request):
     if request.method == "GET":
+        messages.error(request, 'Nice try, log in or register.')
         return redirect('/')
     user = User.userManager.register(request.POST['firstname'], request.POST['lastname'], request.POST['email'], request.POST['password'], request.POST['passc'])
     if 'errors' in user:
@@ -41,6 +42,7 @@ def register(request):
 
 def success(request):
     if 'userid' not in request.session:
+        messages.error(request, 'Nice try, log in or register.')
         return redirect('/')
     context = {'user': User.userManager.all(), 'loggeduser': User.userManager.get(id=request.session['userid'])}
     #context = {'user': User.userManager.filter(id=id)}
@@ -48,6 +50,7 @@ def success(request):
 
 def login(request):
     if request.method == "GET":
+        messages.error(request, 'Nice try, log in or register.')
         return redirect('/')
     user = User.userManager.login(request.POST['email'], request.POST['password'])
     if 'errors' in user:
@@ -78,6 +81,7 @@ def logout(request):
 
 def delete(request, id):
     if 'userid' not in request.session:
+        messages.error(request, 'Nice try, log in or register.')
         return redirect('/')
     User.userManager.filter(id=id).delete()
     return redirect('/logout')
@@ -93,4 +97,5 @@ def delete(request, id):
             # {% endfor %}
         # Created: {{users.created_at}}<br />
 def any(request):
+    messages.error(request, 'Nice try.')
     return redirect('/')
